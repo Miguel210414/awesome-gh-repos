@@ -1,0 +1,75 @@
+#!/usr/bin/env bash
+set -e -o pipefail
+
+col="${1:-repos}"
+
+sortForAll='.stargazersCount'
+badgeForAll='\(.stargazersCount)'
+labelForAll="Most Popular"
+if [ "$col" == "stars" ]; then
+  sortForAll='.createdAt'
+  badgeForAll='\(.createdAt|gsub("T.*";""))'
+  labelForAll="Recently Starred"
+fi
+
+sortForLang='.pushedAt'
+badgeForLang='\(.stargazersCount)'
+if [ "$col" == "stars" ]; then
+  sortForLang='.createdAt'
+  badgeForLang='\(.createdAt|gsub("T.*";""))'
+fi
+
+nameSlug=$col'/\(.name|ascii_downcase|gsub("[^a-z0-9]";"_")|gsub("^_";"dot_"))'
+
+jq -c '
+sort_by('$sortForAll') | reverse |
+map({ 
+  slug: "'$nameSlug'",
+  badge: "'$badgeForAll'"
+}) |
+{ label:"'"$labelForAll"'",collapsed:true,items:.,badge:"\(.|length)"}
+' cached/$col.json > cached/nav-$col-all.json
+
+jq -c '
+sort_by(.updatedAt) | reverse | .[0:20] |
+map({ 
+  slug: "'$nameSlug'",
+  badge: "\(.updatedAt|gsub("T.*";""))"
+}) |
+{ label:"Recently Updated",collapsed:true,items:.,badge:"\(.|length)" }
+' cached/$col.json > cached/nav-$col-mru.json
+
+LANG_IMPORTS=()
+LANG_ITEMS=()
+
+
+while IFS=  read -r -d $'\0' lang <&3;
+do
+
+  lang_safe="$(echo -n "$lang" | tr '[A-Z]' '[a-z]' | sed -re 's|#|_sharp|g' | sed -re 's|-|_minus|g' | sed -re 's|\+|_plus|g' | tr -c '[a-z0-9]' '_')"
+  
+  LANG_IMPORTS+=("import lang_$lang_safe from \"./nav-$col-lang-$lang_safe.json\";")
+  LANG_ITEMS+=("lang_$lang_safe")
+
+  jq -c '
+  map(select(.language == "'"$lang"'")) | sort_by('$sortForLang') | reverse |
+  map({ 
+    slug: "'$nameSlug'",
+    badge: "'$badgeForLang'"
+  }) |
+  { label:"'"$lang"'",collapsed:true,items:.,badge:"\(.|length)" }
+  ' cached/$col.json > "cached/nav-$col-lang-$lang_safe.json"
+
+done 3< <(jq --raw-output0 'map(.language) | unique | map(select(.!="" and .!=null and .!="Vim script")) | .[]' cached/$col.json)
+
+cat <<-EOF > cached/nav-$col-lang.jsx
+$(IFS=$'\n'; echo "${LANG_IMPORTS[*]}")
+
+export default {
+  label: "By Language",
+  items: [
+    $(IFS=$','; echo "${LANG_ITEMS[*]}") 
+  ],
+  badge: "${#LANG_ITEMS[@]}"
+}
+EOF

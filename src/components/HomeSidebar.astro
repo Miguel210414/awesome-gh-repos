@@ -1,0 +1,21 @@
+---
+
+import { LinkCard } from '@astrojs/starlight/components';
+import { LinkButton } from '@astrojs/starlight/components';
+import { Code } from '@astrojs/starlight/components';
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+---
+
+<div style="max-width:350px; padding-top: 10px; padding-left: 10px">
+    <Card title="My Awesome Repos" icon="heart">
+       <small>
+          Browse my <a href="https://github.com/octocat?tab=repositories">GitHub Repositories</a>.
+       </small>
+    </Card>
+    <Card title="My Awesome Stars" icon="star">
+      <small>
+          Browse my <a href="https://github.com/octocat?tab=stars">GitHub Starred Repositories</a>.
+      </small>
+    </Card>
+</div>

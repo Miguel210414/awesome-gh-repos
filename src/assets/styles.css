@@ -1,0 +1,23 @@
+:root {
+  --sl-font: 'Victor Mono', 'VictorMono', serif;
+}
+
+.sidebar-pane .sidebar-content .sl-badge {
+  right: 0px;
+  position: absolute;
+  display: none;
+  background-color: var(--sl-badge-default-bg);
+  font-size: x-small;
+  margin-top: 2px;
+}
+
+.sidebar-pane:hover a:hover .sl-badge {
+  display: inline-block;
+}
+
+.sidebar-pane li[data-filter-match="false"] {
+  display: none;
+}
+.sidebar-pane details:not(:has( li[data-filter-match="true"] )) {
+  display: none;
+}

@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+set -e -o pipefail
+
+col="${1:-}"
+idx="${2}"
+page_env=$(jq -r '.['$idx'] | to_entries[] | select(.key != "topics") | @sh "export \(.key)=\(.value)"' cached/$col.json)
+eval "$page_env"
+
+doc="src/content/docs/$col/$(echo -n $name | tr '[A-Z]' '[a-z]' | tr -c '[:alnum:]' '_' | sed 's|^_|dot_|').md"
+
+echo "Generating $col/$fullName"
+
+cat <<-EOF > $doc
+---
+label: |
+  ${fullName}
+title: |
+  ${fullName}
+description: |
+  ${description:-$fullName}
+template: doc
+lastUpdated: ${createdAt:-${pushedAt:-${updatedAt:-false}}}
+hero:
+  title: |
+    ${fullName}
+  tagline: |
+    ${description}
+  actions:
+   - link: "${url}"
+     icon: "github"
+     variant: "primary"
+     text: "Source code at GitHub"
+   - link: "${homepage:-$url}"
+     icon: "right-arrow"
+     variant: "secondary"
+     text: "${homepage:-$url}"
+------
+
+\`\`\`json title="$fullName.json"
+$(jq '.['$idx']' cached/$col.json)
+\`\`\`
+
+EOF
+curl -sL "https://raw.githubusercontent.com/${fullName}/refs/heads/${defaultBranch}/README.md" \
+| sed '
+
+s|src=|unsrc=|g;
+s|unsrc="http|src="http|g;
+s|unsrc="#|src="#|g;
+
+s|](|]!(|g;
+s|]!(http|](http|g;
+s|]!(#|](#|g;
+
+s|]:|] !:|g;
+s|] !:http|]: http|g;
+s|] !:#|]: #|g;
+
+' >> $doc

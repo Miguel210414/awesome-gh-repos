@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -e -o pipefail
+mkdir -p cached
+gh search repos --owner $1 --sort updated --visibility public -L 300 -q '.' --json "name,description,stargazersCount,updatedAt,url,homepage,updatedAt,defaultBranch,fullName,language,pushedAt" > cached/repos.json

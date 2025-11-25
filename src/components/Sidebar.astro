@@ -1,0 +1,61 @@
+---
+import Default from '@astrojs/starlight/components/Sidebar.astro';
+---
+
+<!-- let me know about crashes and feature usage -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-02M9X1YFQ7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-02M9X1YFQ7');
+</script>
+
+<!-- author attribution, please leave this here -->
+<a href="https://love.oeiuwq.com/?utm_source=ribbon&utm_medium=web&utm_campaign=love&utm_content=thanks" style="position:fixed;padding:5px 45px;width:128px;bottom:35px;right:-50px;-webkit-transform:rotate(-45deg);-moz-transform:rotate(-45deg);-ms-transform:rotate(-45deg);transform:rotate(-45deg);box-shadow:0 0 0 3px #663399;text-shadow:0 0 0 #ffffff;background-color:#663399;color:#ffffff;;font-family:monospace;text-decoration:none;font-weight:bold;border:2px dotted #ffffff;-webkit-backface-visibility:hidden;letter-spacing:.5px;z-index: 9000;width: fit-content;font-size: xx-small;">with &lt;3 by @oeiuwq</a>
+
+
+<input type="text" id="sidebar-filter" class="filter" placeholder="Filter by repository name" />
+<Default><slot /></Default>
+
+<script>
+import { timeagoLiveSmart } from 'wiaxy-timeago'
+requestAnimationFrame(() => {
+document.querySelectorAll(".sidebar .sl-badge").forEach(e => {
+  if (e.innerText.match(/^\d+-\d+-\d+$/)) { 
+    timeagoLiveSmart(e, e.innerText)
+  }
+});
+})
+</script>
+
+<script>
+function debounce(delay, func) {
+    let timer;
+    return function(...args) {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+            requestAnimationFrame(func);
+        }, delay);
+    };
+}
+
+const filter = document.getElementById("sidebar-filter")
+document.querySelectorAll(".sidebar li").forEach(e => e.setAttribute("data-filter-match", "true"))
+document.querySelectorAll(".sidebar li > a").forEach(a => {
+  filter.addEventListener("keyup", () => {
+    debounce(600, () => { 
+        const ft = filter.value.replaceAll(/ +/g, " ").trim()
+        const li = a.closest("li")
+        if (ft.length < 3) {
+            li.setAttribute('data-filter-match', true)
+            return;
+        }
+        const rx = ft.split(' ').map(s => new RegExp(s))
+        const matches = rx.filter(r => r.test(a.innerText)).length == rx.length
+        li.setAttribute('data-filter-match', matches)
+    })
+  })
+});
+</script>

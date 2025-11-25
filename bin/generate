@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+set -e -o pipefail
+
+USER="${1:-}"
+shift
+REPO="${1:-}"
+shift
+
+if test -z "$USER"; then
+  echo "Expected GitHub username" >&2
+  exit 1
+fi
+if test -z "$REPO"; then
+  echo "Expected GitHub repository" >&2
+  exit 1
+fi
+
+sed "s|octocat|$USER|g" -i src/components/Search.astro
+sed "s|octocat|$USER|g" -i src/components/HomeSidebar.astro
+sed "s|octocat|$USER|g" -i src/content/docs/index.mdx
+sed "s|octocat|$USER|g" -i astro.config.mjs
+sed "s|awesome_gh_repos|$REPO|g" -i astro.config.mjs
+
+fetch-repos $USER
+fetch-stars
+generate-nav repos
+generate-nav stars
+generate-pages repos
+generate-pages stars

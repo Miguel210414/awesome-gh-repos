@@ -1,0 +1,33 @@
+---
+import Default from '@astrojs/starlight/components/Search.astro';
+import { LinkButton } from '@astrojs/starlight/components';
+---
+<style>
+  .sl-link-button:hover {
+    font-style: italic;
+  }
+
+  .sl-link-button {
+    border-width: 1px;
+    border-style: dotted;
+  }
+
+  .sl-link-button.active {
+    font-weight: bolder;
+    color: var(--sl-color-text-accent);
+  }
+
+  .search { 
+    margin-left: 30px;
+    margin-top: 5px;
+    min-width: 300px;
+  }
+</style>
+
+<span class="sites">
+ <LinkButton variant="minimal" href="http://github.com/octocat">octocat</LinkButton>
+</span>
+
+<span class="search">
+  <Default><slot /></Default>
+</span>

@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -e -o pipefail
+
+col="${1:-repos}"
+mkdir -p src/content/docs/$col
+seq 0 $(jq 'length - 1' cached/$col.json) | xargs -n 1 -P 0 generate-page $col

@@ -1,0 +1,40 @@
+---
+const { title, description } = Astro.locals.starlightRoute.entry.data;
+const isRepo = Astro.locals.starlightRoute.id.startsWith('repo/');
+const isHomePage = Astro.locals.starlightRoute.id === '';
+
+import Default from '@astrojs/starlight/components/PageSidebar.astro';
+import { LinkCard } from '@astrojs/starlight/components';
+import { LinkButton } from '@astrojs/starlight/components';
+import { Code } from '@astrojs/starlight/components';
+import { Card, CardGrid } from '@astrojs/starlight/components';
+import HomeSidebar from './HomeSidebar.astro';
+---
+
+{
+  isHomePage && (<HomeSidebar />)
+}
+
+{
+  isRepo && (
+    <>
+      <div style="max-width:400px; padding: 10px;">
+        <img src={`https://githubcard.com/${title}.svg?d=WK5W0irw`} />
+        <br />
+        <Code code={description} lang="markdown" frame="terminal" wrap="true" title={title} />
+      </div>
+    </>
+  )
+}
+{
+  !isHomePage && (
+    <Default><slot /></Default>
+  )
+}
+{
+  isRepo && (
+    <>
+      <div><img src={`https://githubcard.com/${title}.svg?d=ED0fs-Ak`} /></div>
+    </>
+  )
+}

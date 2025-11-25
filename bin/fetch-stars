@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -e -o pipefail
+mkdir -p cached
+gh api /user/starred --paginate --jq 'map({ name:.name, topics:.topics, stargazersCount:.stargazers_count, defaultBranch:.default_branch, description:.description, url:.html_url, homepage:.homepage, fullName:.full_name, language:.language, pushedAt:.pushed_at, updatedAt:.updated_at, createdAt:.created_at })'  > cached/stars.json
+jq -c -s flatten cached/stars.json > cached/stars-flat.json
+mv cached/stars-flat.json cached/stars.json
